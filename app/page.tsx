@@ -29,7 +29,7 @@ function Login() {
       <div className={styles.rightPageContainer}>
 
         <div className={styles.rightMainContainer}>
-          <h1 style={{fontSize: '2rem', color: 'var(--secondary-color)', fontWeight: '700'}}>Let's Begin.</h1>
+          <h1 style={{fontSize: '2rem', color: 'var(--secondary-color)', fontWeight: '700'}}>Let&apos;s Begin.</h1>
 
           <div className={styles.buttonContainer}>
 
