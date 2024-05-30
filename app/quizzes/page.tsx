@@ -13,30 +13,77 @@ import Link from 'next/link'
   const [answer4, setAnswer4] = useState('');
   const [answerCorrect, setAnswerCorrect] = useState('');
   const [materia, setMateria] = useState('');
+   
+  const placeholderData = [{
+    id: 11,
+    description: "Question updated",
+    answer_1: "First possible answer",
+    answer_2: "Second possible answer",
+    answer_3: "Third possible answer",
+    answer_4: "Fourth possible answer",
+    answer_correct: "Correct answer",
+    materia: "Subject of the question"
+  }];
+  
+  const [data, setData] = useState(placeholderData);
+
+  interface MateriaItem {
+    id: number;
+    materia: string;
+  }
+  
+  const getMaterias = async () => {
+    const res = await fetch('http://localhost:3001/api/get-materias', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  
+    const data = await res.json();
+  
+    const materias = data.map((item: MateriaItem) => item.materia);
+  
+    return materias;
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const question = {
-      description,
-      answer_1: answer1,
-      answer_2: answer2,
-      answer_3: answer3,
-      answer_4: answer4,
-      answer_correct: answerCorrect,
-      materia,
-    };
-
-    const res = await fetch('http://localhost:3001/api/post-questions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(question),
-    });
-
-    const data = await res.json();
-    console.log(data);
+    if(action == 'create'){
+      const question = {
+        description,
+        answer_1: answer1,
+        answer_2: answer2,
+        answer_3: answer3,
+        answer_4: answer4,
+        answer_correct: answerCorrect,
+        materia,
+      };
+  
+      const res = await fetch('http://localhost:3001/api/post-questions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(question),
+      });
+  
+      const data = await res.json();
+      console.log(data);
+    }
+    else if(action == 'read'){
+      const res = await fetch(`http://localhost:3001/api/get-questions/${materia}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+  
+      const data = await res.json();
+      setData(data);
+      console.log(data);
+    }
   };
 
 
@@ -128,26 +175,27 @@ import Link from 'next/link'
 
               {action === 'read' && (
               <>
-                <div className={styles.smallText}>Please select the Quiz and Question you want to read. </div>
+                <div className={styles.smallText}>Read the questions of a course </div>
                 <div className={styles.box}>
-                  <select className={styles.selector} defaultValue="">
-                    <option value="" disabled>Pick a Quiz
-                    </option>
-                    <option value="quiz1">Quiz 1</option>
-                    <option value="quiz2">Quiz 2</option>
-                    <option value="quiz3">Quiz 3</option>
-                  </select>
+                <input
+                      type="text"
+                      id="materia"
+                      value={materia}
+                      onChange={(e) => setMateria(e.target.value)}
+                      placeholder="Course"
+                />
+                  
+                  <div>
+                  <p>{`ID: ${data[0].id}`}</p>
+                  <p>{`Description: ${data[0].description}`}</p>
+                  <p>{`Answer 1: ${data[0].answer_1}`}</p>
+                  <p>{`Answer 2: ${data[0].answer_2}`}</p>
+                  <p>{`Answer 3: ${data[0].answer_3}`}</p>
+                  <p>{`Answer 4: ${data[0].answer_4}`}</p>
+                  <p>{`Correct Answer: ${data[0].answer_correct}`}</p>
+                  <p>{`Materia: ${data[0].materia}`}</p>
+                  </div>  
 
-
-                  <select className={styles.selector} defaultValue="">
-                    <option value="" disabled>Pick a Question</option>
-                    
-                        {/* Aqui los values deben de cambiar a lo de question creo? no se @david */}
-                    <option value="quiz1">Question 1</option>
-                    <option value="quiz2">Question 2</option>
-                    <option value="quiz3">Question 3</option>
-                    <option value="quiz3">Question 4</option>
-                  </select>
                 </div>
                 </>
               )}
@@ -364,4 +412,4 @@ import Link from 'next/link'
   );
 };
 
-export default Quizzes
+export default Quizzes;
