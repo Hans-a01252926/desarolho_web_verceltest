@@ -10,11 +10,10 @@ import {
 } from '@clerk/nextjs';
 
 
-export default function Login() {
+function Login() {
   
   return (
     <>
-
     <div className={styles.mainPage}>
       <div className={styles.leftPageContainer}>
 
@@ -72,3 +71,5 @@ export default function Login() {
     </>
   );
 }
+
+export default Login;
